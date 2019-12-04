@@ -1,0 +1,12 @@
+[Unit]
+Description=Duet API listener to shutdown the SBC
+After=duetcontrolserver.service
+Requires=duetcontrolserver.service
+
+[Service]
+ExecStart=/usr/local/bin/shutdownsbc
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
