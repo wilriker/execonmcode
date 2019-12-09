@@ -15,3 +15,13 @@ Usage of ./execonmcode:
   -socketPath string
         Path to socket (default "/var/run/duet.sock")
 ```
+
+# Installation
+* Download
+* Rename to just `execonmcode`
+* Put it into `/usr/local/bin` (or any other path in your $PATH)
+* Run it as `root`
+* Optional: use the `shutdownsbc.service` systemd unit (included in the repo) to run it at startup and let it shutdown the SBC (customize to your liking)
+
+# Contribution
+I am happy about comments, suggestions, bug reports, pull requests, etc. either here or in [the forum](https://forum.duet3d.com/topic/13194).
