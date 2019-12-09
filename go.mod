@@ -1,4 +1,4 @@
-module github.com/wilriker/dsfext-shutdownsbc
+module github.com/wilriker/execonmcode
 
 go 1.13
 
