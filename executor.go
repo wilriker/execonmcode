@@ -1,6 +1,7 @@
 package execonmcode
 
 import (
+	"fmt"
 	"log"
 	"os/exec"
 	"strings"
@@ -24,9 +25,14 @@ type Executor struct {
 
 func NewExecutor(socketPath, command string, mCode int64) *Executor {
 	s := strings.Split(command, " ")
-	a := []string{}
+	a := make([]string, 0)
 	if len(s) > 1 {
-		a = s[1:]
+		for _, p := range s[1:] {
+			pp := strings.TrimSpace(p)
+			if pp != "" {
+				a = append(a, p)
+			}
+		}
 	}
 	c := s[0]
 	return &Executor{
@@ -54,9 +60,9 @@ func (e *Executor) Run() {
 		}
 		if c.Type == types.MCode && c.MajorNumber != nil && *c.MajorNumber == e.mCode {
 			cmd := exec.Command(e.command, e.getArgs(c)...)
-			err := cmd.Run()
+			output, err := cmd.CombinedOutput()
 			if err != nil {
-				err = ic.ResolveCode(types.Error, err.Error())
+				err = ic.ResolveCode(types.Error, fmt.Sprintf("%s: %s", err.Error(), string(output)))
 			} else {
 				err = ic.ResolveCode(types.Success, "")
 			}
@@ -70,7 +76,7 @@ func (e *Executor) Run() {
 }
 
 func (e *Executor) getArgs(c *commands.Code) []string {
-	args := make([]string, len(e.args))
+	args := make([]string, 0)
 	for _, v := range e.args {
 		if strings.HasPrefix(v, variablePrefix) {
 			vl := strings.TrimSpace(strings.ToUpper(strings.TrimLeft(v, variablePrefix)))
