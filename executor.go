@@ -5,9 +5,14 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/wilriker/goduetapiclient/commands"
 	"github.com/wilriker/goduetapiclient/connection"
 	"github.com/wilriker/goduetapiclient/connection/initmessages"
 	"github.com/wilriker/goduetapiclient/types"
+)
+
+const (
+	variablePrefix = "%"
 )
 
 type Executor struct {
@@ -48,7 +53,7 @@ func (e *Executor) Run() {
 			continue
 		}
 		if c.Type == types.MCode && c.MajorNumber != nil && *c.MajorNumber == e.mCode {
-			cmd := exec.Command(e.command, e.args...)
+			cmd := exec.Command(e.command, e.getArgs(c)...)
 			err := cmd.Run()
 			if err != nil {
 				err = ic.ResolveCode(types.Error, err.Error())
@@ -62,4 +67,20 @@ func (e *Executor) Run() {
 			ic.IgnoreCode()
 		}
 	}
+}
+
+func (e *Executor) getArgs(c *commands.Code) []string {
+	args := make([]string, len(e.args))
+	for _, v := range e.args {
+		if strings.HasPrefix(v, variablePrefix) {
+			vl := strings.TrimSpace(strings.ToUpper(strings.TrimLeft(v, variablePrefix)))
+			if len(vl) == 1 {
+				if pv := c.Parameter(vl); pv != nil {
+					v = pv.AsString()
+				}
+			}
+		}
+		args = append(args, v)
+	}
+	return args
 }

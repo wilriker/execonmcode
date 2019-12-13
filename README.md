@@ -16,6 +16,28 @@ Usage of ./execonmcode:
         Path to socket (default "/var/run/duet.sock")
 ```
 
+## Parameters
+`execonmcode` does provide a simple mechanism for parameter substitution. It is possible to pass string parameters to the
+selected `M-Code` and have them inserted in the `-command`. In the command string they have to be single letters prefixed by
+the percent-sign (`%`) and they must not be `G`, `M` or `T`.
+
+All parameters that do not have a corresponding value in the `M-Code` will be forwarded as given.
+
+### Example
+Run `execonmcode` as
+```
+$ ./execonmcode -command "mycommand %F %N %D"
+```
+Then you can use the following `M-Code` syntax to replace these parameters
+```
+M7722 F"my first parameter" N"my second parameter"
+```
+this will lead to an execution of
+```
+mycommand "my first parameter" "my second parameter" %D
+```
+Note that `%D` was passed as is since it was not given in the `M-Code`.
+
 # Installation
 * Download
 * Rename to just `execonmcode`
