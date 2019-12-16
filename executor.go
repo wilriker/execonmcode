@@ -2,6 +2,7 @@ package execonmcode
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os/exec"
 	"strings"
@@ -55,7 +56,11 @@ func (e *Executor) Run() {
 	for {
 		c, err := ic.ReceiveCode()
 		if err != nil {
-			log.Println("Error:", err)
+			if err == io.EOF {
+				log.Println("Connection to DCS closed")
+				break
+			}
+			log.Printf("Error receiving code: %s", err)
 			continue
 		}
 		if c.Type == types.MCode && c.MajorNumber != nil && *c.MajorNumber == e.mCode {
@@ -67,7 +72,7 @@ func (e *Executor) Run() {
 				err = ic.ResolveCode(types.Success, "")
 			}
 			if err != nil {
-				log.Println("Error:", err)
+				log.Println("Error executing command:", err)
 			}
 		} else {
 			ic.IgnoreCode()
