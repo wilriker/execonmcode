@@ -10,26 +10,24 @@ import (
 
 type settings struct {
 	socketPath string
-	mCode      int64
-	command    string
+	mCodes     execonmcode.MCodes
+	commands   execonmcode.Commands
+	debug      bool
 }
 
 func main() {
 	s := settings{}
 
-	flag.StringVar(&s.socketPath, "socketPath", connection.DefaultSocketPath, "Path to socket")
-	flag.Int64Var(&s.mCode, "mCode", 7722, "Code that will initiate execution of the command")
-	flag.StringVar(&s.command, "command", "", "Command to execute")
+	flag.StringVar(&s.socketPath, "socketPath", connection.FullSocketPath, "Path to socket")
+	flag.Var(&s.mCodes, "mCode", "Code that will initiate execution of the command")
+	flag.Var(&s.commands, "command", "Command to execute")
+	flag.BoolVar(&s.debug, "debug", false, "Print debug output")
 	flag.Parse()
 
-	if s.mCode < 0 {
-		log.Fatal("--mCode must be >= 0")
+	if s.mCodes.Len() != s.commands.Len() {
+		log.Fatal("Unequal amount of M-codes and commands given")
 	}
 
-	if s.command == "" {
-		log.Fatal("--command must not be empty")
-	}
-
-	e := execonmcode.NewExecutor(s.socketPath, s.command, s.mCode)
+	e := execonmcode.NewExecutor(s.socketPath, s.commands, s.mCodes, s.debug)
 	e.Run()
 }

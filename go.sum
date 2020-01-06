@@ -4,3 +4,7 @@ github.com/wilriker/goduetapiclient v0.0.0-20191213105344-41ea5d36085a h1:jlWEyW
 github.com/wilriker/goduetapiclient v0.0.0-20191213105344-41ea5d36085a/go.mod h1:KSadGbt2Z/wbyhZoh3I+Zp0me9YqrLhAPrAjH9J8OLM=
 github.com/wilriker/goduetapiclient v1.1.0 h1:s2ufoNPyEZ8QxP7lY0COMfDGRf1A6x/xPxEdsoT9cGA=
 github.com/wilriker/goduetapiclient v1.1.0/go.mod h1:KSadGbt2Z/wbyhZoh3I+Zp0me9YqrLhAPrAjH9J8OLM=
+github.com/wilriker/goduetapiclient v1.1.1-0.20191226195316-8e83bd8e4124 h1:YApThH1QQk1QShCc82Crj7aSiDXtWJdxS39kOFiU61c=
+github.com/wilriker/goduetapiclient v1.1.1-0.20191226195316-8e83bd8e4124/go.mod h1:KSadGbt2Z/wbyhZoh3I+Zp0me9YqrLhAPrAjH9J8OLM=
+github.com/wilriker/goduetapiclient v1.2.0 h1:lB5owgJVYpTeMjWcT6slQwKXQgPgrzCdHdeNIv80JCo=
+github.com/wilriker/goduetapiclient v1.2.0/go.mod h1:KSadGbt2Z/wbyhZoh3I+Zp0me9YqrLhAPrAjH9J8OLM=

@@ -19,28 +19,28 @@ const (
 
 type Executor struct {
 	socketPath string
-	mCode      int64
-	command    string
-	args       []string
+	mCodes     map[int64]int
+	commands   Commands
+	debug      bool
 }
 
-func NewExecutor(socketPath, command string, mCode int64) *Executor {
-	s := strings.Split(command, " ")
-	a := make([]string, 0)
-	if len(s) > 1 {
-		for _, p := range s[1:] {
-			pp := strings.TrimSpace(p)
-			if pp != "" {
-				a = append(a, p)
+func NewExecutor(socketPath string, commands Commands, mCodes MCodes, debug bool) *Executor {
+	mc := make(map[int64]int)
+	for i, m := range mCodes {
+		mc[m] = i
+		if debug {
+			cmd, args, err := commands.Get(i)
+			if err != nil {
+				log.Println(m, err)
 			}
+			log.Printf("%d: %s %s", m, cmd, strings.Join(args, " "))
 		}
 	}
-	c := s[0]
 	return &Executor{
 		socketPath: socketPath,
-		command:    c,
-		args:       a,
-		mCode:      mCode,
+		mCodes:     mc,
+		commands:   commands,
+		debug:      debug,
 	}
 }
 
@@ -63,16 +63,29 @@ func (e *Executor) Run() {
 			log.Printf("Error receiving code: %s", err)
 			continue
 		}
-		if c.Type == types.MCode && c.MajorNumber != nil && *c.MajorNumber == e.mCode {
-			cmd := exec.Command(e.command, e.getArgs(c)...)
-			output, err := cmd.CombinedOutput()
-			if err != nil {
-				err = ic.ResolveCode(types.Error, fmt.Sprintf("%s: %s", err.Error(), string(output)))
-			} else {
-				err = ic.ResolveCode(types.Success, "")
+		if c.Type == types.MCode && c.MajorNumber != nil {
+			i, ok := e.mCodes[*c.MajorNumber]
+			if !ok {
+				ic.IgnoreCode()
+				continue
 			}
+			comd, a, err := e.commands.Get(i)
 			if err != nil {
-				log.Println("Error executing command:", err)
+				ic.ResolveCode(types.Error, err.Error())
+			} else {
+				cmd := exec.Command(comd, e.getArgs(c, a)...)
+				if e.debug {
+					log.Println("Executing:", cmd)
+				}
+				output, err := cmd.CombinedOutput()
+				if err != nil {
+					err = ic.ResolveCode(types.Error, fmt.Sprintf("%s: %s", err.Error(), string(output)))
+				} else {
+					err = ic.ResolveCode(types.Success, "")
+				}
+				if err != nil {
+					log.Println("Error executing command:", err)
+				}
 			}
 		} else {
 			ic.IgnoreCode()
@@ -80,9 +93,9 @@ func (e *Executor) Run() {
 	}
 }
 
-func (e *Executor) getArgs(c *commands.Code) []string {
-	args := make([]string, 0)
-	for _, v := range e.args {
+func (e *Executor) getArgs(c *commands.Code, args []string) []string {
+	a := make([]string, 0)
+	for _, v := range args {
 		if strings.HasPrefix(v, variablePrefix) {
 			vl := strings.TrimSpace(strings.ToUpper(strings.TrimLeft(v, variablePrefix)))
 			if len(vl) == 1 {
@@ -91,7 +104,7 @@ func (e *Executor) getArgs(c *commands.Code) []string {
 				}
 			}
 		}
-		args = append(args, v)
+		a = append(a, v)
 	}
-	return args
+	return a
 }
