@@ -6,15 +6,20 @@ An example usage would be to execute system shutdown on the SBC when a e.g. `M77
 
 # Usage
 ```
-$ ./execonmcode --help
+$ ./execonmcode -help
 Usage of ./execonmcode:
-  -command string
+  -command value
         Command to execute
-  -mCode int
-        Code that will initiate execution of the command (default 7722)
+  -debug
+        Print debug output
+  -mCode value
+        Code that will initiate execution of the command
   -socketPath string
-        Path to socket (default "/var/run/duet.sock")
+        Path to socket (default "/var/run/dsf/dcs.sock")
 ```
+
+Starting from version 3 it is possible to provide an arbitrary number of `-mCode` + `-command` tuples. This way a
+single instance of `execonmcode` can handle multiple commands. Side-effect is that there is no more default for `-mCode`.
 
 ## Parameters
 `execonmcode` does provide a simple mechanism for parameter substitution. It is possible to pass string parameters to the
