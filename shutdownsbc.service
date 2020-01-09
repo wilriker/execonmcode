@@ -4,7 +4,7 @@ After=duetcontrolserver.service
 Requires=duetcontrolserver.service
 
 [Service]
-ExecStart=/usr/local/bin/execonmcode --command "poweroff"
+ExecStart=/usr/local/bin/execonmcode -mCode 7722 -command "poweroff"
 Restart=always
 RestartSec=10
 
