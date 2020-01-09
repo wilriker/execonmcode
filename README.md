@@ -6,7 +6,7 @@ An example usage would be to execute system shutdown on the SBC when a e.g. `M77
 
 # Usage
 ```
-$ ./execonmcode -help
+$ execonmcode -help
 Usage of ./execonmcode:
   -command value
         Command to execute
@@ -31,7 +31,7 @@ All parameters that do not have a corresponding value in the `M-Code` will be fo
 ### Example
 Run `execonmcode` as
 ```
-$ ./execonmcode -command "mycommand %F %N %D"
+$ execonmcode -command "mycommand %F %N %D"
 ```
 Then you can use the following `M-Code` syntax to replace these parameters
 ```
@@ -46,8 +46,9 @@ Note that `%D` was passed as is since it was not given in the `M-Code`.
 # Installation
 * Download
 * Rename to just `execonmcode`
-* Put it into `/usr/local/bin` (or any other path in your $PATH)
-* Run it as `root`
+* Make executable via `chmod +x execonmcode`
+* Put it into any path of your `$PATH` e.g. `/usr/local/bin`
+* Run it as `root` or with `sudo`
 * Optional: use the `shutdownsbc.service` systemd unit (included in the repo) to run it at startup and let it shutdown the SBC (customize to your liking)
 
 # Contribution
