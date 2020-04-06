@@ -7,10 +7,10 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/wilriker/goduetapiclient/commands"
-	"github.com/wilriker/goduetapiclient/connection"
-	"github.com/wilriker/goduetapiclient/connection/initmessages"
-	"github.com/wilriker/goduetapiclient/types"
+	"github.com/Duet3D/DSF-APIs/godsfapi/commands"
+	"github.com/Duet3D/DSF-APIs/godsfapi/connection"
+	"github.com/Duet3D/DSF-APIs/godsfapi/connection/initmessages"
+	"github.com/Duet3D/DSF-APIs/godsfapi/types"
 )
 
 const (
@@ -22,9 +22,10 @@ type Executor struct {
 	mCodes     map[int64]int
 	commands   Commands
 	debug      bool
+	trace      bool
 }
 
-func NewExecutor(socketPath string, commands Commands, mCodes MCodes, debug bool) *Executor {
+func NewExecutor(socketPath string, commands Commands, mCodes MCodes, debug, trace bool) *Executor {
 	mc := make(map[int64]int)
 	for i, m := range mCodes {
 		mc[m] = i
@@ -41,15 +42,17 @@ func NewExecutor(socketPath string, commands Commands, mCodes MCodes, debug bool
 		mCodes:     mc,
 		commands:   commands,
 		debug:      debug,
+		trace:      trace,
 	}
 }
 
-func (e *Executor) Run() {
+func (e *Executor) Run() error {
 
 	ic := connection.InterceptConnection{}
+	ic.Debug = e.trace
 	err := ic.Connect(initmessages.InterceptionModePre, e.socketPath)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer ic.Close()
 
@@ -58,7 +61,12 @@ func (e *Executor) Run() {
 		if err != nil {
 			if err == io.EOF {
 				log.Println("Connection to DCS closed")
-				break
+				return err
+			}
+			if _, ok := err.(*connection.DecodeError); ok {
+				// If it is "just" a problem with decoding ignore the received code
+				// as it otherwise will block DCS
+				ic.IgnoreCode()
 			}
 			log.Printf("Error receiving code: %s", err)
 			continue
