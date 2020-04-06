@@ -16,6 +16,8 @@ Usage of ./execonmcode:
         Code that will initiate execution of the command
   -socketPath string
         Path to socket (default "/var/run/dsf/dcs.sock")
+  -trace
+        Print underlying requests/responses
 ```
 
 Starting from version 3 it is possible to provide an arbitrary number of `-mCode` + `-command` tuples. This way a
