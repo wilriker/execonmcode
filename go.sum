@@ -3,5 +3,7 @@ github.com/Duet3D/DSF-APIs v2.1.0+incompatible h1:UW9VZATPRJRXvbP1vBpiNL9S/iUzTu
 github.com/Duet3D/DSF-APIs/godsfapi v0.0.0-20200422123133-670706fea346 h1:Qjo7CFDbeW2cVjn/iBbbx3gcjecHPKiWDcpkVDdADTg=
 github.com/Duet3D/DSF-APIs/godsfapi/v2 v2.0.0-20200422123133-670706fea346 h1:wC9h+UN3xETa7xlkEAJyvBwpfVD2zB7H1d4kvni49bw=
 github.com/Duet3D/DSF-APIs/godsfapi/v2 v2.0.0-20200422123133-670706fea346/go.mod h1:4MbBdIOM6SlzCSvtSjpeAj2S62ANmW0fFHeOk8SpjXw=
+github.com/Duet3D/DSF-APIs/godsfapi/v2 v2.1.0 h1:MyOKBEE8lpo4pEZtJ4BGgmxH7wttNwfVm50+n0J3SIY=
+github.com/Duet3D/DSF-APIs/godsfapi/v2 v2.1.0/go.mod h1:4MbBdIOM6SlzCSvtSjpeAj2S62ANmW0fFHeOk8SpjXw=
 github.com/mitchellh/mapstructure v1.2.2 h1:dxe5oCinTXiTIcfgmZecdCzPmAJKd46KsCWc35r0TV4=
 github.com/mitchellh/mapstructure v1.2.2/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
