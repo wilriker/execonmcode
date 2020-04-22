@@ -1,2 +1,7 @@
-github.com/Duet3D/DSF-APIs/godsfapi v0.0.0-20200406084749-1671ee2a95ae h1:+T8uabIU7Tp8alI/II5MdX9W3iSLYWOsH5bhbw225Yk=
-github.com/Duet3D/DSF-APIs/godsfapi v0.0.0-20200406084749-1671ee2a95ae/go.mod h1:Pr9LdwVqZpjqHTUKaWmzCCWzk2jn1QaLTPaDF6UKlWo=
+github.com/Duet3D/DSF-APIs v1.2.4 h1:J5ez7gAEzQdxqLMgBy2+EY5xCQIlDJM+Xt0HR80+L/0=
+github.com/Duet3D/DSF-APIs v2.1.0+incompatible h1:UW9VZATPRJRXvbP1vBpiNL9S/iUzTucB0C6n95jXamA=
+github.com/Duet3D/DSF-APIs/godsfapi v0.0.0-20200422123133-670706fea346 h1:Qjo7CFDbeW2cVjn/iBbbx3gcjecHPKiWDcpkVDdADTg=
+github.com/Duet3D/DSF-APIs/godsfapi/v2 v2.0.0-20200422123133-670706fea346 h1:wC9h+UN3xETa7xlkEAJyvBwpfVD2zB7H1d4kvni49bw=
+github.com/Duet3D/DSF-APIs/godsfapi/v2 v2.0.0-20200422123133-670706fea346/go.mod h1:4MbBdIOM6SlzCSvtSjpeAj2S62ANmW0fFHeOk8SpjXw=
+github.com/mitchellh/mapstructure v1.2.2 h1:dxe5oCinTXiTIcfgmZecdCzPmAJKd46KsCWc35r0TV4=
+github.com/mitchellh/mapstructure v1.2.2/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=

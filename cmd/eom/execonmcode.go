@@ -3,9 +3,14 @@ package main
 import (
 	"flag"
 	"log"
+	"os"
 
-	"github.com/Duet3D/DSF-APIs/godsfapi/connection"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v2/connection"
 	"github.com/wilriker/execonmcode"
+)
+
+const (
+	version = "5.0"
 )
 
 type settings struct {
@@ -25,7 +30,13 @@ func main() {
 	flag.Var(&s.commands, "command", "Command to execute")
 	flag.BoolVar(&s.debug, "debug", false, "Print debug output")
 	flag.BoolVar(&s.trace, "trace", false, "Print underlying requests/responses")
+	version := flag.Bool("version", false, "Show version and exit")
 	flag.Parse()
+
+	if *version {
+		log.Println(version)
+		os.Exit(0)
+	}
 
 	if s.mCodes.Len() != s.commands.Len() {
 		log.Fatal("Unequal amount of M-codes and commands given")

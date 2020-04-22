@@ -7,10 +7,10 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/Duet3D/DSF-APIs/godsfapi/commands"
-	"github.com/Duet3D/DSF-APIs/godsfapi/connection"
-	"github.com/Duet3D/DSF-APIs/godsfapi/connection/initmessages"
-	"github.com/Duet3D/DSF-APIs/godsfapi/types"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v2/commands"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v2/connection"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v2/connection/initmessages"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v2/machine/messages"
 )
 
 const (
@@ -71,15 +71,21 @@ func (e *Executor) Run() error {
 			log.Printf("Error receiving code: %s", err)
 			continue
 		}
-		if c.Type == types.MCode && c.MajorNumber != nil {
+		if c.Type == commands.MCode && c.MajorNumber != nil {
 			i, ok := e.mCodes[*c.MajorNumber]
 			if !ok {
 				ic.IgnoreCode()
 				continue
 			}
+			success, err := ic.Flush(c.Channel)
+			if !success || err != nil {
+				log.Println("Could not Flush. Cancelling code")
+				ic.CancelCode()
+				continue
+			}
 			comd, a, err := e.commands.Get(i)
 			if err != nil {
-				ic.ResolveCode(types.Error, err.Error())
+				ic.ResolveCode(messages.Error, err.Error())
 			} else {
 				cmd := exec.Command(comd, e.getArgs(c, a)...)
 				if e.debug {
@@ -87,9 +93,9 @@ func (e *Executor) Run() error {
 				}
 				output, err := cmd.CombinedOutput()
 				if err != nil {
-					err = ic.ResolveCode(types.Error, fmt.Sprintf("%s: %s", err.Error(), string(output)))
+					err = ic.ResolveCode(messages.Error, fmt.Sprintf("%s: %s", err.Error(), string(output)))
 				} else {
-					err = ic.ResolveCode(types.Success, "")
+					err = ic.ResolveCode(messages.Success, "")
 				}
 				if err != nil {
 					log.Println("Error executing command:", err)
