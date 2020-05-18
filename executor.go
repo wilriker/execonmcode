@@ -7,10 +7,10 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/Duet3D/DSF-APIs/godsfapi/v2/commands"
-	"github.com/Duet3D/DSF-APIs/godsfapi/v2/connection"
-	"github.com/Duet3D/DSF-APIs/godsfapi/v2/connection/initmessages"
-	"github.com/Duet3D/DSF-APIs/godsfapi/v2/machine/messages"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v3/commands"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v3/connection"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v3/connection/initmessages"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v3/machine/messages"
 )
 
 const (

@@ -5,12 +5,12 @@ import (
 	"log"
 	"os"
 
-	"github.com/Duet3D/DSF-APIs/godsfapi/v2/connection"
+	"github.com/Duet3D/DSF-APIs/godsfapi/v3/connection"
 	"github.com/wilriker/execonmcode"
 )
 
 const (
-	version = "5.0"
+	version = "5.1"
 )
 
 type settings struct {
