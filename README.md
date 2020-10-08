@@ -28,11 +28,11 @@ single instance of `execonmcode` can handle multiple commands. Side-effect is th
 selected `M-Code` and have them inserted in the `-command`. In the command string they have to be single letters prefixed by
 the percent-sign (`%`) and they must not be `G`, `M` or `T`.
 
+All parameters that do not have a corresponding value in the `M-Code` will be forwarded as given.
+
 ### Parameters in systemd units
 Since `%` is used to access systemd-specific variables in unit files it is
 necessary to escape them by using double-percent, i.e. `%%`.
-
-All parameters that do not have a corresponding value in the `M-Code` will be forwarded as given.
 
 ### Example
 Run `execonmcode` as
