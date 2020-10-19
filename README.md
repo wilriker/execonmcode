@@ -1,5 +1,5 @@
 # Description
-This is a small extension to [DuetSoftwareFramework](https://github.com/christhamm/DuetSoftwareFramework)
+This is a small extension to [DuetSoftwareFramework](https://github.com/Duet3D/DuetSoftwareFramework)
 to execute arbitrary system commands when a user-defined `M-Code` is encountered.
 
 An example usage would be to execute system shutdown on the SBC when a e.g. `M7722` is run.
@@ -9,15 +9,23 @@ An example usage would be to execute system shutdown on the SBC when a e.g. `M77
 $ execonmcode -help
 Usage of ./execonmcode:
   -command value
-        Command to execute
+        Command to execute. This can be specified multiple times.
   -debug
         Print debug output
+  -execAsync
+        Run command to execute async and return success to DCS immediately
+  -interceptionMode string
+        Interception mode to use (default "Pre")
   -mCode value
-        Code that will initiate execution of the command
+        Code that will initiate execution of the command. This can be specified multiple times.
+  -noFlush
+        Do not flush the code channel before executing the associated command
   -socketPath string
         Path to socket (default "/var/run/dsf/dcs.sock")
   -trace
         Print underlying requests/responses
+  -version
+        Show version and exit
 ```
 
 Starting from version 3 it is possible to provide an arbitrary number of `-mCode` + `-command` tuples. This way a

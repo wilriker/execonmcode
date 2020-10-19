@@ -19,18 +19,21 @@ const (
 
 type Executor struct {
 	socketPath string
+	mode       initmessages.InterceptionMode
 	mCodes     map[int64]int
 	commands   Commands
+	execAsync  bool
+	flush      bool
 	debug      bool
 	trace      bool
 }
 
-func NewExecutor(socketPath string, commands Commands, mCodes MCodes, debug, trace bool) *Executor {
+func NewExecutor(s Settings) *Executor {
 	mc := make(map[int64]int)
-	for i, m := range mCodes {
+	for i, m := range s.MCodes {
 		mc[m] = i
-		if debug {
-			cmd, args, err := commands.Get(i)
+		if s.Debug {
+			cmd, args, err := s.Commands.Get(i)
 			if err != nil {
 				log.Println(m, err)
 			}
@@ -38,11 +41,14 @@ func NewExecutor(socketPath string, commands Commands, mCodes MCodes, debug, tra
 		}
 	}
 	return &Executor{
-		socketPath: socketPath,
+		socketPath: s.SocketPath,
+		mode:       initmessages.InterceptionMode(s.InterceptionMode),
 		mCodes:     mc,
-		commands:   commands,
-		debug:      debug,
-		trace:      trace,
+		commands:   s.Commands,
+		execAsync:  s.ExecAsync,
+		flush:      !s.NoFlush,
+		debug:      s.Debug,
+		trace:      s.Trace,
 	}
 }
 
@@ -50,7 +56,7 @@ func (e *Executor) Run() error {
 
 	ic := connection.InterceptConnection{}
 	ic.Debug = e.trace
-	err := ic.Connect(initmessages.InterceptionModePre, e.socketPath)
+	err := ic.Connect(e.mode, e.socketPath)
 	if err != nil {
 		return err
 	}
@@ -77,11 +83,13 @@ func (e *Executor) Run() error {
 				ic.IgnoreCode()
 				continue
 			}
-			success, err := ic.Flush(c.Channel)
-			if !success || err != nil {
-				log.Println("Could not Flush. Cancelling code")
-				ic.CancelCode()
-				continue
+			if e.flush {
+				success, err := ic.Flush(c.Channel)
+				if !success || err != nil {
+					log.Println("Could not Flush. Cancelling code")
+					ic.CancelCode()
+					continue
+				}
 			}
 			comd, a, err := e.commands.Get(i)
 			if err != nil {
@@ -91,11 +99,18 @@ func (e *Executor) Run() error {
 				if e.debug {
 					log.Println("Executing:", cmd)
 				}
-				output, err := cmd.CombinedOutput()
-				if err != nil {
-					err = ic.ResolveCode(messages.Error, fmt.Sprintf("%s: %s", err.Error(), string(output)))
-				} else {
+
+				// If we should exec async run it as goroutine and return success
+				if e.execAsync {
+					go cmd.Run()
 					err = ic.ResolveCode(messages.Success, "")
+				} else {
+					output, err := cmd.CombinedOutput()
+					if err != nil {
+						err = ic.ResolveCode(messages.Error, fmt.Sprintf("%s: %s", err.Error(), string(output)))
+					} else {
+						err = ic.ResolveCode(messages.Success, "")
+					}
 				}
 				if err != nil {
 					log.Println("Error executing command:", err)
