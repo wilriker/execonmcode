@@ -58,7 +58,7 @@ mycommand "my first parameter" "my second parameter" %D
 Note that `%D` was passed as is since it was not given in the `M-Code`.
 
 # Installation
-* Download from [Releases](Releases) page. When in doubt use the `armv7h` version.
+* Download from [Releases](https://github.com/wilriker/execonmcode/releases) page. When in doubt use the `armv7h` version.
 * Rename to just `execonmcode`
 * Make executable via `chmod +x execonmcode`
 * Put it into any path of your `$PATH` e.g. `/usr/local/bin`
