@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -12,7 +13,7 @@ import (
 )
 
 const (
-	version = "5.1.1"
+	version = "5.1.2"
 )
 
 func main() {
@@ -25,13 +26,14 @@ func main() {
 	flag.Var(&s.Commands, "command", "Command to execute. This can be specified multiple times.")
 	flag.BoolVar(&s.NoFlush, "noFlush", false, "Do not flush the code channel before executing the associated command")
 	flag.BoolVar(&s.ExecAsync, "execAsync", false, "Run command to execute async and return success to DCS immediately")
+	flag.BoolVar(&s.ReturnOutput, "returnOutput", false, "Return the output of the command back to DCS. Use with care. Cannot be combined with -execAsync.")
 	flag.BoolVar(&s.Debug, "debug", false, "Print debug output")
 	flag.BoolVar(&s.Trace, "trace", false, "Print underlying requests/responses")
-	version := flag.Bool("version", false, "Show version and exit")
+	printVersion := flag.Bool("version", false, "Show version and exit")
 	flag.Parse()
 
-	if *version {
-		log.Println(version)
+	if *printVersion {
+		fmt.Println(version)
 		os.Exit(0)
 	}
 
@@ -48,6 +50,10 @@ func main() {
 		s.InterceptionMode = string(initmessages.InterceptionModeExecuted)
 	default:
 		log.Fatal("Unsupported InterceptionMode", s.InterceptionMode)
+	}
+
+	if s.ExecAsync && s.ReturnOutput {
+		log.Fatal("-execAsync and -returnOutput cannot be used together.")
 	}
 
 	e := execonmcode.NewExecutor(s)

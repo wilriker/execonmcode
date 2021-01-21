@@ -20,6 +20,8 @@ Usage of ./execonmcode:
         Code that will initiate execution of the command. This can be specified multiple times.
   -noFlush
         Do not flush the code channel before executing the associated command
+  -returnOutput
+        Return the output of the command back to DCS. Use with care. Cannot be combined with -execAsync.
   -socketPath string
         Path to socket (default "/var/run/dsf/dcs.sock")
   -trace

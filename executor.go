@@ -18,14 +18,15 @@ const (
 )
 
 type Executor struct {
-	socketPath string
-	mode       initmessages.InterceptionMode
-	mCodes     map[int64]int
-	commands   Commands
-	execAsync  bool
-	flush      bool
-	debug      bool
-	trace      bool
+	socketPath   string
+	mode         initmessages.InterceptionMode
+	mCodes       map[int64]int
+	commands     Commands
+	execAsync    bool
+	returnOutput bool
+	flush        bool
+	debug        bool
+	trace        bool
 }
 
 func NewExecutor(s Settings) *Executor {
@@ -41,14 +42,15 @@ func NewExecutor(s Settings) *Executor {
 		}
 	}
 	return &Executor{
-		socketPath: s.SocketPath,
-		mode:       initmessages.InterceptionMode(s.InterceptionMode),
-		mCodes:     mc,
-		commands:   s.Commands,
-		execAsync:  s.ExecAsync,
-		flush:      !s.NoFlush,
-		debug:      s.Debug,
-		trace:      s.Trace,
+		socketPath:   s.SocketPath,
+		mode:         initmessages.InterceptionMode(s.InterceptionMode),
+		mCodes:       mc,
+		commands:     s.Commands,
+		execAsync:    s.ExecAsync,
+		returnOutput: s.ReturnOutput,
+		flush:        !s.NoFlush,
+		debug:        s.Debug,
+		trace:        s.Trace,
 	}
 }
 
@@ -109,7 +111,11 @@ func (e *Executor) Run() error {
 					if err != nil {
 						err = ic.ResolveCode(messages.Error, fmt.Sprintf("%s: %s", err.Error(), string(output)))
 					} else {
-						err = ic.ResolveCode(messages.Success, "")
+						msg := ""
+						if e.returnOutput {
+							msg = string(output)
+						}
+						err = ic.ResolveCode(messages.Success, msg)
 					}
 				}
 				if err != nil {

@@ -7,6 +7,7 @@ type Settings struct {
 	Commands         Commands
 	NoFlush          bool
 	ExecAsync        bool
+	ReturnOutput     bool
 	Debug            bool
 	Trace            bool
 }
