@@ -21,6 +21,7 @@ type Executor struct {
 	socketPath   string
 	mode         initmessages.InterceptionMode
 	mCodes       map[int64]int
+	filters      []string
 	commands     Commands
 	execAsync    bool
 	returnOutput bool
@@ -31,8 +32,10 @@ type Executor struct {
 
 func NewExecutor(s Settings) *Executor {
 	mc := make(map[int64]int)
+	filters := make([]string, 0)
 	for i, m := range s.MCodes {
 		mc[m] = i
+		filters = append(filters, fmt.Sprintf("M%d", m))
 		if s.Debug {
 			cmd, args, err := s.Commands.Get(i)
 			if err != nil {
@@ -45,6 +48,7 @@ func NewExecutor(s Settings) *Executor {
 		socketPath:   s.SocketPath,
 		mode:         initmessages.InterceptionMode(s.InterceptionMode),
 		mCodes:       mc,
+		filters:      filters,
 		commands:     s.Commands,
 		execAsync:    s.ExecAsync,
 		returnOutput: s.ReturnOutput,
@@ -58,7 +62,7 @@ func (e *Executor) Run() error {
 
 	ic := connection.InterceptConnection{}
 	ic.Debug = e.trace
-	err := ic.Connect(e.mode, e.socketPath)
+	err := ic.Connect(e.mode, nil, e.filters, false, e.socketPath)
 	if err != nil {
 		return err
 	}
