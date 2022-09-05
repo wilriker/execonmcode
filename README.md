@@ -1,3 +1,10 @@
+# Deprecated
+Since the `go`-library is no longer maintained this has been superseeded by a version written in Python.
+
+See [Duet3D Forum Thread](https://forum.duet3d.com/topic/29783) for details.
+
+This repository is now archived.
+
 # Description
 This is a small extension to [DuetSoftwareFramework](https://github.com/Duet3D/DuetSoftwareFramework)
 to execute arbitrary system commands when a user-defined `M-Code` is encountered.
